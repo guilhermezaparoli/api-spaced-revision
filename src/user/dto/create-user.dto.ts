@@ -10,5 +10,5 @@ export class CreateUserDTO {
   @IsStrongPassword({
     minLength: 6,
   })
-  password: string;
+  password_hash: string;
 }
