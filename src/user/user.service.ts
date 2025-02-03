@@ -13,10 +13,7 @@ export class UserService {
         name,
         email,
         password_hash,
-      },
-      select: {
-        id: true,
-      },
+      }
     });
   }
 
