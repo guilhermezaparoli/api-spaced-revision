@@ -72,6 +72,9 @@ export class SubjectService {
       where: {
         user_id: userToken.id,
       },
+      orderBy: {
+        name: "asc"
+      },
       select: {
         id: true,
         name: true,

@@ -25,28 +25,28 @@ export class UserController {
     return this.userService.create({email, name, password_hash})
   }
 
-  @Put(':id')
-  async fullUpdate(
-    @Body() { email, name, password_hash }: UpdatePutUserDTO,
-    @Param('id') id,
-  ) {
-    return {
-      body: {
-        email,
-        name,
-        password_hash,
-      },
-      id,
-    };
-  }
+  // @Put(':id')
+  // async fullUpdate(
+  //   @Body() { email, name, password_hash }: UpdatePutUserDTO,
+  //   @Param('id') id,
+  // ) {
+  //   return {
+  //     body: {
+  //       email,
+  //       name,
+  //       password_hash,
+  //     },
+  //     id,
+  //   };
+  // }
 
   @UseGuards(AuthGuard)
-  @Patch(':id')
+  @Put(':id')
   async partialUpdate(
-    @Body() {  name, password_hash }: UpdatePatchUserDTO,
+    @Body() {  name, password_hash, email }: UpdatePutUserDTO,
     @Param('id') id,
   ) {
-    return this.userService.update({id, name, password_hash})
+    return this.userService.update({id, name, password_hash, email})
   }
 
   @Delete(':id')
