@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { SubjectModule } from './subject/subject.module';
 import { TaskModule } from './task/task.module';
+import { ReviewModel } from './review/review.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { TaskModule } from './task/task.module';
     forwardRef(() => AuthModule),
     forwardRef(() => SubjectModule),
     forwardRef(() => TaskModule),
+    forwardRef(() => ReviewModel),
   ],
   controllers: [AppController],
   providers: [AppService],

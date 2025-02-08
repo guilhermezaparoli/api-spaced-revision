@@ -3,10 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Subject } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSubjectDTO } from './dto/create-subject.dto';
-import { User } from 'src/decorators/param-user.decorator';
 import { UserTokenDTO } from 'src/user/dto/userToken.dto';
 
 @Injectable()
