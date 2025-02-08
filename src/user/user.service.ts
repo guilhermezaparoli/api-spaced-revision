@@ -3,7 +3,6 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdatePatchUserDTO } from './dto/update-patch-user.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
-
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
@@ -17,8 +16,6 @@ export class UserService {
       },
     });
   }
-
-  // @UseGuards(AuthGuard)
   async update({ id, name, password_hash }: UpdatePatchUserDTO) {
     await this.exists(id);
 
@@ -30,6 +27,10 @@ export class UserService {
       where: {
         id,
       },
+      select: {
+        name: true,
+        email: true,
+      }
     });
   }
 

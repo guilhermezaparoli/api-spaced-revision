@@ -63,6 +63,7 @@ export class AuthService {
     }
   }
 
+
   async login(email: string, password_hash: string) {
     const user = await this.prisma.user.findFirst({
       where: {
@@ -102,11 +103,12 @@ export class AuthService {
 
     return this.createToken(user);
   }
-
   async register(data: AuthRegisterDTO) {
     const user = await this.userService.create(data);
 
     return this.createToken(user);
   }
   
+
+
 }

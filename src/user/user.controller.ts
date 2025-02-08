@@ -8,11 +8,13 @@ import {
   Patch,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdatePutUserDTO } from './dto/update-put-user.dto';
 import { UpdatePatchUserDTO } from './dto/update-patch-user.dto';
 import { UserService } from './user.service';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('users')
 export class UserController {
@@ -37,6 +39,8 @@ export class UserController {
       id,
     };
   }
+
+  @UseGuards(AuthGuard)
   @Patch(':id')
   async partialUpdate(
     @Body() {  name, password_hash }: UpdatePatchUserDTO,
