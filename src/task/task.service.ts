@@ -46,14 +46,32 @@ export class TaskService {
     if (subject.user_id !== user.id) {
       throw new ForbiddenException('Essa matéria não pertence ao usuário');
     }
-
-    await this.prisma.task.create({
+    
+    const task = await this.prisma.task.create({
       data: {
         name: data.name,
         description: data.description,
+        intervals: data.intervals,
         subject_id,
       },
     });
+    
+    if(data.intervals.length > 0){
+      const reviewsDate = data.intervals.map((interval) => {
+        const review_date = new Date(task.created_at)
+        review_date.setDate(review_date.getDate() + interval)
+        return {
+          review_date,
+          task_id: task.id
+        }
+      })
+
+      await this.prisma.review.createMany({
+        data: reviewsDate
+      })
+    }
+
+    return task
   }
 
   // atualizar a verificação do usuário

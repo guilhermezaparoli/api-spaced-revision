@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
 
 export class CreateTaskDTO {
   @IsString()
@@ -6,4 +6,8 @@ export class CreateTaskDTO {
 
   @IsString()
   description: string;
+
+  @IsArray()
+  @IsNumber({}, { each: true }) 
+  intervals: number[];
 }

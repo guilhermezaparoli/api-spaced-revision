@@ -13,17 +13,15 @@ import { UserTokenDTO } from 'src/user/dto/userToken.dto';
 export class SubjectService {
   constructor(readonly prisma: PrismaService) {}
 
-  async create(data: CreateSubjectDTO) {
-    return await this.prisma.subject.create({
-      data,
-      select: {
-        id: true,
-        name: true,
-      },
-    });
+  private async validateOwnership(id: string, userToken: UserTokenDTO) {
+    const subject = await this.findSubjectById(id);
+    if (subject.user_id !== userToken.id) {
+      throw new ForbiddenException('Essa matéria não pertence ao usuário');
+    }
+    return subject;
   }
 
-  async subjectExist(id: string) {
+  async findSubjectById(id: string) {
     const subject = await this.prisma.subject.findUnique({
       where: {
         id,
@@ -37,12 +35,18 @@ export class SubjectService {
     return subject;
   }
 
-  async update(id: string, userToken: UserTokenDTO, name: string) {
-    const subject = await this.subjectExist(id);
+  async create(data: CreateSubjectDTO) {
+    return await this.prisma.subject.create({
+      data,
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+  }
 
-    if (subject.user_id !== userToken.id) {
-      throw new ForbiddenException('Essa matéria não pertence ao usuário');
-    }
+  async update(id: string, userToken: UserTokenDTO, name: string) {
+    await this.validateOwnership(id, userToken);
 
     await this.prisma.subject.update({
       where: {
@@ -56,15 +60,38 @@ export class SubjectService {
   }
 
   async delete(id: string, userToken: UserTokenDTO) {
-    const subject = await this.subjectExist(id);
-
-    if (subject.user_id !== userToken.id) {
-      throw new ForbiddenException('Essa matéria não pertence ao usuário');
-    }
+    await this.validateOwnership(id, userToken);
 
     await this.prisma.subject.delete({
       where: {
         id,
+      },
+    });
+  }
+
+  async getAll(userToken: UserTokenDTO) {
+    return this.prisma.subject.findMany({
+      where: {
+        user_id: userToken.id,
+      },
+      select: {
+        id: true,
+        name: true,
+        task: {
+          orderBy: {
+            created_at: 'asc',
+          },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            review: {
+              orderBy: {
+                review_date: 'asc'
+              }
+            }
+          },
+        },
       },
     });
   }

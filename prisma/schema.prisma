@@ -41,6 +41,7 @@ model Task {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   completed   Boolean  @default(false)
+  intervals   Int[]    @default([1, 7, 14, 30, 60])
 
   subject    Subject @relation(fields: [subject_id], references: [id], onDelete: Cascade)
   subject_id String
