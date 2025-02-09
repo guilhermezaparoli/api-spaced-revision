@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { SubjectModule } from './subject/subject.module';
 import { TaskModule } from './task/task.module';
 import { ReviewModel } from './review/review.module';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -14,8 +16,20 @@ import { ReviewModel } from './review/review.module';
     forwardRef(() => SubjectModule),
     forwardRef(() => TaskModule),
     forwardRef(() => ReviewModel),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 10,
+      },
+    ]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

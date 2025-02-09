@@ -12,7 +12,11 @@ import { UserIdCheckMiddleware } from 'src/middlewares/user-id-check.middlewere'
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [PrismaModule, forwardRef(() => AuthModule)],
+  imports: [
+ 
+    PrismaModule,
+    forwardRef(() => AuthModule),
+  ],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],
