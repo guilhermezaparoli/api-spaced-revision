@@ -14,8 +14,6 @@ export class UserService {
 
     password_hash = await bcryp.hash(password_hash, salt);
 
-    console.log(password_hash)
-
     return await this.prisma.user.create({
       data: {
         name,

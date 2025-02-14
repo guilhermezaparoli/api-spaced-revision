@@ -42,7 +42,7 @@ export class TaskService {
 
   async create(subject_id: string, data: CreateTaskDTO, user: UserTokenDTO) {
     const subject = await this.subjectExists(subject_id);
-    console.log(subject.user_id, user.id);
+  
     if (subject.user_id !== user.id) {
       throw new ForbiddenException('Essa matéria não pertence ao usuário');
     }

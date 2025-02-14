@@ -33,9 +33,12 @@ export class SubjectService {
     return subject;
   }
 
-  async create(data: CreateSubjectDTO) {
+  async create(data: CreateSubjectDTO, user: UserTokenDTO) {
     return await this.prisma.subject.create({
-      data,
+      data: {
+        name: data.name,
+        user_id: user.id,
+      },
       select: {
         id: true,
         name: true,
@@ -73,7 +76,7 @@ export class SubjectService {
         user_id: userToken.id,
       },
       orderBy: {
-        name: "asc"
+        name: 'asc',
       },
       select: {
         id: true,
@@ -88,9 +91,9 @@ export class SubjectService {
             description: true,
             review: {
               orderBy: {
-                review_date: 'asc'
-              }
-            }
+                review_date: 'asc',
+              },
+            },
           },
         },
       },

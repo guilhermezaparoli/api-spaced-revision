@@ -21,8 +21,8 @@ export class SubjectController {
   constructor(readonly subjectService: SubjectService) {}
 
   @Post('create')
-  async create(@Body() body: CreateSubjectDTO) {
-    return await this.subjectService.create(body);
+  async create(@Body() body: CreateSubjectDTO, @User() user:UserTokenDTO) {
+    return await this.subjectService.create(body, user);
   }
 
   @Put(':id')
