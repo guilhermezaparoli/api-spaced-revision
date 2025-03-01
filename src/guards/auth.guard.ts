@@ -1,4 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/auth/auth.service';
 import { UserService } from 'src/user/user.service';
@@ -11,11 +12,14 @@ export class AuthGuard implements CanActivate {
   ) {}
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
+    const requestWithCookie = context.switchToHttp().getRequest<Request>();
     const { authorization } = request.headers;
+    const tokenCookie = requestWithCookie?.cookies?.authToken?.accesstoken ?? null;
+
+console.log(requestWithCookie)
     try {
-      const data = this.authService.checkToken(
-        (authorization ?? '').split(' ')[1],
-      );
+      const data = this.authService.checkToken(tokenCookie);
+ 
       request.tokenPayload = data;
 
       request.user = await this.userService.show(data.id);

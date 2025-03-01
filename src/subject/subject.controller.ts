@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { CreateSubjectDTO } from './dto/create-subject.dto';
@@ -14,6 +15,7 @@ import { UpdateSubjectDTO } from './dto/update-subject.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { User } from 'src/decorators/param-user.decorator';
 import { UserTokenDTO } from 'src/user/dto/userToken.dto';
+import { Request } from 'express';
 
 @UseGuards(AuthGuard)
 @Controller('subject')
@@ -36,6 +38,7 @@ export class SubjectController {
 
   @Get()
   async getAll(@User() user: UserTokenDTO) {
+    
     return await this.subjectService.getAll(user);
   }
 

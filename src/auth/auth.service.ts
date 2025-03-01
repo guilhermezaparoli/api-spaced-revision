@@ -9,6 +9,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthRegisterDTO } from './dto/auth-register.dto';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -64,7 +65,9 @@ export class AuthService {
     }
   }
 
-  async login(email: string, password_hash: string) {
+  async login(email: string, password_hash: string, response: Response) {
+
+
     const user = await this.prisma.user.findFirst({
       where: {
         email,
@@ -79,6 +82,15 @@ export class AuthService {
       throw new UnauthorizedException('E-mail e/ou senha incorretos.');
     }
 
+    const token = this.createToken(user)
+    response.cookie("authToken",token , {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 1,
+      path: "/",
+      sameSite: "lax",
+      domain: "localhost" //
+    })
+    
     return this.createToken(user);
   }
   async forget(email: string) {
