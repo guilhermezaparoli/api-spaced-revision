@@ -6,6 +6,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSubjectDTO } from './dto/create-subject.dto';
 import { UserTokenDTO } from 'src/user/dto/userToken.dto';
+import { UpdateSubjectDTO } from './dto/update-subject.dto';
 
 @Injectable()
 export class SubjectService {
@@ -36,20 +37,24 @@ export class SubjectService {
   async create(data: CreateSubjectDTO, user: UserTokenDTO) {
     return await this.prisma.subject.create({
       data: {
-        name: data.name,
+        ...data,
         user_id: user.id,
       },
       select: {
         id: true,
         name: true,
+        task: true,
+        user_id: true,
       },
     });
   }
 
-  async update(id: string, userToken: UserTokenDTO, name: string) {
+  async update(id: string, userToken: UserTokenDTO, {
+    name
+  }: UpdateSubjectDTO) {
     await this.validateOwnership(id, userToken);
 
-    await this.prisma.subject.update({
+   return await this.prisma.subject.update({
       where: {
         id,
         user_id: userToken.id,
@@ -57,6 +62,7 @@ export class SubjectService {
       data: {
         name,
       },
+      
     });
   }
 

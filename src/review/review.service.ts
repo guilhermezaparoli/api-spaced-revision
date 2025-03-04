@@ -35,6 +35,15 @@ export class ReviewService {
       data: {
         completed: allCompleted,
       },
+      select: {
+        id: true,
+        subject_id: true,
+        review: {
+          orderBy: {
+            review_date: 'asc'
+          }
+        },
+      }
     });
   }
 

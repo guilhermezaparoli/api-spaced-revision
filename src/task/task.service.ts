@@ -7,7 +7,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UserTokenDTO } from 'src/user/dto/userToken.dto';
-import { UpdateTaskDTO } from './dto/update-task.dto';
+import { UpdateTaskDTO } from './dto/path-task.dto';
 
 @Injectable()
 export class TaskService {
@@ -51,13 +51,13 @@ export class TaskService {
       data: {
         name: data.name,
         description: data.description,
-        intervals: data.intervals,
+        intervals: subject.intervals,
         subject_id,
       },
     });
     
-    if(data.intervals.length > 0){
-      const reviewsDate = data.intervals.map((interval) => {
+    if(subject.intervals.length > 0){
+      const reviewsDate = subject.intervals.map((interval) => {
         const review_date = new Date(task.created_at)
         review_date.setDate(review_date.getDate() + interval)
         return {

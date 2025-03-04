@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/auth/auth.service';
@@ -16,7 +16,6 @@ export class AuthGuard implements CanActivate {
     const { authorization } = request.headers;
     const tokenCookie = requestWithCookie?.cookies?.authToken?.accesstoken ?? null;
 
-console.log(requestWithCookie)
     try {
       const data = this.authService.checkToken(tokenCookie);
  
@@ -25,7 +24,7 @@ console.log(requestWithCookie)
       request.user = await this.userService.show(data.id);
       return true;
     } catch (error) {
-      return false;
+      throw new UnauthorizedException('Invalid or expired token')
     }
   }
 }

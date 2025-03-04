@@ -30,10 +30,10 @@ export class SubjectController {
   @Put(':id')
   async update(
     @User() user: UserTokenDTO,
-    @Body() { name }: UserTokenDTO,
+    @Body() body: UpdateSubjectDTO,
     @Param('id') id: string,
   ) {
-    return await this.subjectService.update(id, user, name);
+    return await this.subjectService.update(id, user, body);
   }
 
   @Get()
