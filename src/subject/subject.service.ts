@@ -95,6 +95,7 @@ export class SubjectService {
             id: true,
             name: true,
             description: true,
+            completed: true,
             review: {
               orderBy: {
                 review_date: 'asc',

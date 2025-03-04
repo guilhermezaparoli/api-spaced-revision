@@ -123,4 +123,12 @@ export class AuthService {
 
     return this.createToken(user);
   }
+
+  async logout(res: Response) {
+    res.clearCookie('authToken', {
+      path: '/',
+    });
+
+    return res.status(200).json('Logged out successfully');
+  }
 }

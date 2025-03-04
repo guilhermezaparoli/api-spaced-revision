@@ -14,4 +14,5 @@ export class ReviewController {
   async update(@Param('id') id: string, @Body() data: UpdateReviewDTO) {
     return this.reviewService.update(id, data)
   }
+
 }

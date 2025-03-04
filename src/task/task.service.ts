@@ -42,11 +42,11 @@ export class TaskService {
 
   async create(subject_id: string, data: CreateTaskDTO, user: UserTokenDTO) {
     const subject = await this.subjectExists(subject_id);
-  
+
     if (subject.user_id !== user.id) {
       throw new ForbiddenException('Essa matéria não pertence ao usuário');
     }
-    
+
     const task = await this.prisma.task.create({
       data: {
         name: data.name,
@@ -55,25 +55,25 @@ export class TaskService {
         subject_id,
       },
     });
-    
-    if(subject.intervals.length > 0){
+
+    if (subject.intervals.length > 0) {
       const reviewsDate = subject.intervals.map((interval) => {
-        const review_date = new Date(task.created_at)
-        review_date.setDate(review_date.getDate() + interval)
+        const review_date = new Date(task.created_at);
+        review_date.setDate(review_date.getDate() + interval);
         return {
           review_date,
-          task_id: task.id
-        }
-      })
+          task_id: task.id,
+        };
+      });
 
       await this.prisma.review.createMany({
-        data: reviewsDate
-      })
+        data: reviewsDate,
+      });
     }
 
     return await this.prisma.task.findUnique({
       where: {
-        id: task.id
+        id: task.id,
       },
       select: {
         completed: true,
@@ -81,9 +81,9 @@ export class TaskService {
         subject_id: true,
         review: true,
         name: true,
-        id: true
-      }
-    })
+        id: true,
+      },
+    });
   }
 
   // atualizar a verificação do usuário
@@ -109,16 +109,15 @@ export class TaskService {
         review: true,
         id: true,
         subject_id: true,
-        
       },
     });
   }
 
   // atualizar a verificação do usuário
   async delete(id: string) {
-    const task = await this.taskExists(id);
+    await this.taskExists(id);
 
-     await this.prisma.task.delete({
+    await this.prisma.task.delete({
       where: {
         id,
       },

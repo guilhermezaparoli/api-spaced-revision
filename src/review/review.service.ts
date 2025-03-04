@@ -38,6 +38,7 @@ export class ReviewService {
       select: {
         id: true,
         subject_id: true,
+        completed: true,
         review: {
           orderBy: {
             review_date: 'asc'

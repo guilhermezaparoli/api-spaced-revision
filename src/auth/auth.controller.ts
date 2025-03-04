@@ -50,6 +50,11 @@ export class AuthController {
     return this.authService.reset(password_hash, token);
   }
 
+  @Post("logout")
+  async logout(@Res() res: Response) {
+    return this.authService.logout(res)
+  }
+
   // @UseGuards(AuthGuard)
   @Post('me')
   async me(@User() user) {
