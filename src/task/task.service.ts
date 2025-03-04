@@ -71,7 +71,19 @@ export class TaskService {
       })
     }
 
-    return task
+    return await this.prisma.task.findUnique({
+      where: {
+        id: task.id
+      },
+      select: {
+        completed: true,
+        description: true,
+        subject_id: true,
+        review: true,
+        name: true,
+        id: true
+      }
+    })
   }
 
   // atualizar a verificação do usuário
@@ -93,6 +105,11 @@ export class TaskService {
       select: {
         name: true,
         description: true,
+        completed: true,
+        review: true,
+        id: true,
+        subject_id: true,
+        
       },
     });
   }
