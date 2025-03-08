@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -64,6 +65,13 @@ export class AuthService {
       return false;
     }
   }
+  async isEmailUserExists(email: string) {
+    return await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+  }
 
   async login(email: string, password_hash: string, response: Response) {
     const user = await this.prisma.user.findFirst({
@@ -90,7 +98,7 @@ export class AuthService {
       secure: false,
     });
 
-    return this.createToken(user);
+    return { token };
   }
   async forget(email: string) {
     const user = await this.prisma.user.findFirst({
@@ -118,10 +126,25 @@ export class AuthService {
 
     return this.createToken(user);
   }
-  async register(data: AuthRegisterDTO) {
+  async register(data: AuthRegisterDTO, response: Response) {
+    const emailInUse = await this.isEmailUserExists(data.email);
+    if (emailInUse) {
+      throw new ConflictException('Este e-mail já está em uso');
+    }
     const user = await this.userService.create(data);
+    const token = this.createToken(user);
+    response.cookie('authToken', token, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 1000,
+      path: '/',
+      sameSite: 'lax',
+      domain: 'localhost',
+      secure: false,
+    });
+    console.log({ token });
 
-    return this.createToken(user);
+    return response.json("Conta criada com sucesso!");
+
   }
 
   async logout(res: Response) {
