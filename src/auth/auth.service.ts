@@ -80,12 +80,8 @@ export class AuthService {
       },
     });
 
-    if (!user) {
-      throw new UnauthorizedException('E-mail e/ou senha incorretos.');
-    }
-
-    if (!(await bcrypt.compare(password_hash, user.password_hash))) {
-      throw new UnauthorizedException('E-mail e/ou senha incorretos.');
+    if (!user || !(await bcrypt.compare(password_hash, user.password_hash))) {
+      throw new UnauthorizedException('Invalid email or password.');
     }
 
     const token = this.createToken(user);
@@ -141,7 +137,7 @@ export class AuthService {
       domain: 'localhost',
       secure: false,
     });
-    console.log({ token });
+  
 
     return response.json("Conta criada com sucesso!");
 
