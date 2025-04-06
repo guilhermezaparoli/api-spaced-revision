@@ -51,7 +51,6 @@ export class TaskService {
       data: {
         name: data.name,
         description: data.description,
-        intervals: subject.intervals,
         subject_id,
       },
     });
