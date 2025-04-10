@@ -45,6 +45,7 @@ model Task {
 
   subject    Subject @relation(fields: [subject_id], references: [id], onDelete: Cascade)
   subject_id String
+  intervals Int[]
 
   review Review[]
 
